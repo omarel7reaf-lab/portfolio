@@ -7,8 +7,11 @@ export const personalInfo = {
   name: 'Omar Amr Refaat',
   firstName: 'Omar',
   lastName: 'Amr Refaat',
+  avatar: '/avatar.jpg',
   jobTitle: 'Frontend Developer & Neon Lab Creator',
   subtitle: '11-Year-Old Young Tech Enthusiast',
+  about:
+    'Passionate 11-year-old developer crafting responsive, modern, and interactive web interfaces with HTML5, CSS3, JavaScript, Bootstrap, and React.',
   shortBio:
     'Passionate 11-year-old developer crafting responsive, modern, and interactive web interfaces with HTML5, CSS3, JavaScript, Bootstrap, and React.',
   heroDescription:

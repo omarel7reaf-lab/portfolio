@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { aboutData, personalInfo } from '../data/portfolioData';
 import TiltCard from './TiltCard';
+import { playHoverSound } from '../utils/cyberAudio';
 
 /* Bi-directional animated counter hook */
 function useBiDirectionalCounter(target, duration = 1200) {
@@ -76,34 +77,56 @@ function useBiDirectionalCounter(target, duration = 1200) {
 function StatCard({ stat }) {
   const [ref, value] = useBiDirectionalCounter(stat.value);
   return (
-    <TiltCard maxTilt={10} className="about__stat" style={{ padding: '20px', minHeight: 'auto' }}>
+    <TiltCard
+      maxTilt={12}
+      className="about__stat"
+      style={{ padding: '22px', minHeight: 'auto' }}
+      onMouseEnter={playHoverSound}
+    >
       <div ref={ref} style={{ width: '100%' }}>
-        <div className="about__stat-value" style={{ color: 'var(--primary)', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+        <div
+          className="about__stat-value"
+          style={{
+            color: 'var(--primary)',
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 900,
+            fontSize: '2.4rem',
+            letterSpacing: '-1px',
+          }}
+        >
           {value}
         </div>
-        <div className="about__stat-label">{stat.label}</div>
+        <div className="about__stat-label" style={{ fontWeight: 700, letterSpacing: '0.5px' }}>
+          {stat.label}
+        </div>
       </div>
     </TiltCard>
   );
 }
 
-export default function About() {
+export default function About({ hyperMode }) {
   return (
-    <section id="about" className="section">
+    <section id="about" className="section about-section">
       <div className="container">
+        {/* Section Header */}
         <div className="section__header">
-          <span className="section__label">// DISCOVER THE CREATOR</span>
-          <h2 className="section__title">About Me</h2>
+          <div className="section__kicker-badge">
+            <span className="kicker-dot" />
+            <span>[ 03 // ORIGIN &amp; PHILOSOPHY ]</span>
+          </div>
+          <h2 className="section__title">
+            About <span className="text-gradient">The Creator</span>
+          </h2>
           <p className="section__subtitle">
             Crafting futuristic, high-performance web experiences with code and relentless curiosity.
           </p>
         </div>
 
         <div className="about__inner">
-          {/* Avatar with 3D Tilt */}
+          {/* Avatar Column with 3D Holographic Card */}
           <div className="about__image-section fade-in-left">
             <TiltCard
-              maxTilt={12}
+              maxTilt={14}
               style={{
                 maxWidth: '380px',
                 margin: '0 auto',
@@ -113,6 +136,12 @@ export default function About() {
               }}
             >
               <div style={{ position: 'relative', width: '100%' }}>
+                {/* Cyber corner brackets */}
+                <span className="card-corner card-corner--tl" />
+                <span className="card-corner card-corner--tr" />
+                <span className="card-corner card-corner--bl" />
+                <span className="card-corner card-corner--br" />
+
                 <img
                   src="/avatar.jpg"
                   alt={personalInfo.name}
@@ -122,9 +151,12 @@ export default function About() {
                     objectFit: 'cover',
                     borderRadius: 'var(--radius-xl)',
                     border: '2px solid rgba(0, 240, 255, 0.4)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(168, 85, 247, 0.25)',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(168, 85, 247, 0.3)',
+                    display: 'block',
+                    width: '100%',
                   }}
                 />
+
                 <div
                   style={{
                     position: 'absolute',
@@ -133,43 +165,82 @@ export default function About() {
                     background: 'var(--card)',
                     padding: '8px 18px',
                     borderRadius: 'var(--radius-full)',
-                    border: '1px solid rgba(0, 240, 255, 0.3)',
-                    fontSize: '0.8rem',
+                    border: '1px solid rgba(0, 240, 255, 0.4)',
+                    fontSize: '0.78rem',
                     fontFamily: 'var(--font-mono)',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     color: 'var(--primary)',
-                    boxShadow: 'var(--shadow-glow)',
+                    boxShadow: '0 0 20px rgba(0, 240, 255, 0.35)',
+                    letterSpacing: '1px',
                   }}
                 >
-                  🚀 11 YEARS OLD // FRONTEND DEV
+                  ⚡ 11 YEARS OLD // FRONTEND PRODIGY
                 </div>
               </div>
             </TiltCard>
           </div>
 
-          {/* Content */}
+          {/* Content Column */}
           <div className="about__content fade-in-right">
-            <h3 style={{ fontSize: '1.4rem', color: 'var(--heading)', fontWeight: 700, marginBottom: '16px' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '12px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.85rem',
+                color: 'var(--primary)',
+                fontWeight: 700,
+              }}
+            >
+              <span>// MISSION DIRECTIVE</span>
+            </div>
+
+            <h3
+              style={{
+                fontSize: '1.75rem',
+                color: 'var(--heading)',
+                fontWeight: 800,
+                marginBottom: '18px',
+                fontFamily: 'var(--font-heading)',
+                letterSpacing: '-0.5px',
+                lineHeight: 1.3,
+              }}
+            >
               {aboutData.headline}
             </h3>
 
-            <p className="about__text" style={{ marginBottom: '16px', lineHeight: 1.8 }}>
+            <p className="about__text" style={{ marginBottom: '16px', lineHeight: 1.8, fontSize: '1.05rem' }}>
               {aboutData.biography}
             </p>
 
-            <p className="about__text" style={{ marginBottom: '24px', lineHeight: 1.8 }}>
+            <p className="about__text" style={{ marginBottom: '24px', lineHeight: 1.8, fontSize: '1.05rem' }}>
               {aboutData.biographyPart2}
             </p>
 
             <div className="about__highlights" style={{ marginBottom: '28px' }}>
               {aboutData.interests.map((interest) => (
-                <div key={interest} className="about__highlight-item">
+                <div
+                  key={interest}
+                  className="about__highlight-item"
+                  onMouseEnter={playHoverSound}
+                >
                   <span className="about__highlight-icon" style={{ color: 'var(--primary)' }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </span>
-                  <span>{interest}</span>
+                  <span style={{ fontWeight: 600 }}>{interest}</span>
                 </div>
               ))}
             </div>
@@ -178,15 +249,24 @@ export default function About() {
             {aboutData.philosophy && (
               <div
                 style={{
-                  borderLeft: '3px solid var(--primary)',
-                  paddingLeft: '16px',
+                  borderLeft: '4px solid var(--primary)',
+                  padding: '18px 24px',
                   marginBottom: '32px',
                   background: 'var(--gradient-subtle)',
-                  padding: '16px 20px',
-                  borderRadius: 'var(--radius-md)',
+                  borderRadius: '0 var(--radius-md) var(--radius-md) 0',
+                  boxShadow: '0 0 30px rgba(0, 240, 255, 0.05)',
                 }}
               >
-                <p className="about__text" style={{ fontStyle: 'italic', margin: 0, color: 'var(--heading)' }}>
+                <p
+                  className="about__text"
+                  style={{
+                    fontStyle: 'italic',
+                    margin: 0,
+                    color: 'var(--heading)',
+                    fontSize: '1.05rem',
+                    fontWeight: 500,
+                  }}
+                >
                   "{aboutData.philosophy}"
                 </p>
               </div>

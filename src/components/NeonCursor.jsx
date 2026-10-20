@@ -20,23 +20,36 @@ export default function NeonCursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let rx = mx, ry = my;
+    let mx = -100, my = -100;
+    let rx = -100, ry = -100;
     let rafId;
     let isHover = false;
-    let isDown  = false;
-
-    // Hide the system cursor
-    document.documentElement.style.cursor = 'none';
+    let isDown = false;
+    let isVisible = false;
 
     const onMove = (e) => {
       mx = e.clientX;
       my = e.clientY;
+      if (!isVisible) {
+        isVisible = true;
+        rx = mx;
+        ry = my;
+        document.documentElement.style.cursor = 'none';
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+      }
       // Check if over an interactive element
       const target = e.target;
       isHover = !!(
-        target.closest('a, button, [role="button"], input, textarea, select, label, .neon-tilt-card, .project-card')
+        target && target.closest && target.closest('a, button, [role="button"], input, textarea, select, label, .neon-tilt-card, .project-card, .hud-btn')
       );
+    };
+
+    const onLeave = () => {
+      isVisible = false;
+      document.documentElement.style.cursor = '';
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
     };
 
     const onClick = () => {
@@ -45,27 +58,34 @@ export default function NeonCursor() {
       setTimeout(() => {
         dot.classList.remove('cursor-click');
         ring.classList.remove('cursor-click');
-      }, 400);
+      }, 350);
     };
 
-    const onDown  = () => { isDown = true; };
-    const onUp    = () => { isDown = false; };
+    const onDown = () => { isDown = true; };
+    const onUp = () => { isDown = false; };
+
+    // Initially hide custom cursor until first mouse move
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
 
     window.addEventListener('mousemove', onMove, { passive: true });
+    document.addEventListener('mouseleave', onLeave);
     window.addEventListener('click', onClick, { passive: true });
     window.addEventListener('mousedown', onDown, { passive: true });
     window.addEventListener('mouseup', onUp, { passive: true });
 
     const animate = () => {
       rafId = requestAnimationFrame(animate);
+      if (!isVisible) return;
+
       // Lerp ring to mouse
-      rx += (mx - rx) * 0.13;
-      ry += (my - ry) * 0.13;
+      rx += (mx - rx) * 0.15;
+      ry += (my - ry) * 0.15;
 
       // Dot — instant
-      dot.style.transform  = `translate(${mx - 4}px, ${my - 4}px)`;
+      dot.style.transform = `translate3d(${mx - 4}px, ${my - 4}px, 0)`;
       // Ring — lagged
-      ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+      ring.style.transform = `translate3d(${rx - 18}px, ${ry - 18}px, 0)`;
 
       // Hover state
       if (isHover) {
@@ -78,9 +98,7 @@ export default function NeonCursor() {
 
       // Press state
       if (isDown) {
-        ring.style.opacity = '0.4';
-      } else {
-        ring.style.opacity = '';
+        ring.style.transform = `translate3d(${rx - 14}px, ${ry - 14}px, 0) scale(0.85)`;
       }
     };
 
@@ -90,6 +108,7 @@ export default function NeonCursor() {
       cancelAnimationFrame(rafId);
       document.documentElement.style.cursor = '';
       window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseleave', onLeave);
       window.removeEventListener('click', onClick);
       window.removeEventListener('mousedown', onDown);
       window.removeEventListener('mouseup', onUp);
